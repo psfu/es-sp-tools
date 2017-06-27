@@ -26,6 +26,7 @@
 
 
 ### Installation:
+* download zip file in dist
 * undeploy zip file in folder ./plugins it will create a folder named "tools-sp".
 * using config.properties to config the plugin
 * sp.tools.path.name can set in elasticsearch.yml
@@ -48,7 +49,8 @@ auth.seed=33024
 * add authentication by user
 * import the shui utils form the Waterwave project
 
-###
+#### The Console:
+ ![00-console.png](https://github.com/psfu/es-sp-tools/raw/master/info/00-console.png)
 
 
 

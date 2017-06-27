@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>sp tools console</title>
+<script src="./_console/js/jquery.js"></script>
+<script>
+function clearShow() {
+	console.info('clear');
+	showDiv.children("p").each(function(idx, e) {
+		console.info(e);
+		e.remove();
+	});
+
+}
+fontSize = 100;
+function upFont() {
+	if (fontSize <= 140) {
+		fontSize += 10;
+		showDiv.css("font-size", fontSize + "%");
+	}
+}
+function downFont() {
+	if (fontSize >= 30) {
+		fontSize -= 10;
+		showDiv.css("font-size", fontSize + "%");
+	}
+}
+function scrollLockChange() {
+	if (scrollLock) {
+		scrollLock = false;
+	} else {
+		scrollLock = true;
+	}
+}
+function inputChange(input) {
+
+}
+function processHistory(input) {
+	var oldcmd = commands[commands.length - 1];
+	if (oldcmd) {
+		input.val(oldcmd);
+	}
+}
+function processInput(input) {
+	var command = input.val().trim();
+	cmd = command;
+
+	var url = esUrl;
+	if (!command.startsWith('sp/')) {
+		url = url + '_cat/';
+		if (command == 'help') {
+			command = '';
+		} else if (command.indexOf('?') < 0) {
+			command += '?v'
+		}
+	} else {
+		url = url + '_sp/';
+		command = command.substring(3);
+	}
+	url += command;
+	$.get(url, null, function(data, status) {
+		processCommand(data, status);
+	}, 'text').fail(function(e) {
+		console.info(e);
+		processError(e);
+	});
+}
+function processCommand(data, status) {
+	console.info(data);
+	console.info(status);
+	if (status = 'success') {
+		dealDataLine(data);
+	}
+}
+
+function dealDataLine(data) {
+	var line = document.createElement('p');
+	var sp = ' ';
+
+	commands.push(cmd);
+	var oldcmd = commands[commands.length - 1];
+
+	var str = '<span style=" color: yellow;">' + oldcmd + ' '
+			+ '</span> : <span> <pre>' + data + '</pre></span>';
+	//+ '</span> : <span> ' + data + '</span>';
+
+	line.innerHTML = str;
+	showDiv.append(line);
+	scorllDown();
+
+	showInput.val('');
+}
+
+function dealDataLineNew(data) {
+	var line = document.createElement('p');
+	var sp = ' ';
+
+	var datas = data.split("\r\n");
+
+	//var str = '<span style=" color: yellow;">' + sp
+	//		+ '</span> : <span> <code>' + data + '</code></span>';
+	//		//+ '</span> : <span> ' + data + '</span>';
+
+	for (l in datas) {
+		var str = '<span style=" color: yellow;">' + sp
+				+ '</span> : <span> <code>' + data + '</code></span>';
+		line.innerHTML = str;
+	}
+
+	line.innerHTML = str;
+	showDiv.append(line);
+	scorllDown();
+}
+
+function scorllDown() {
+	//
+	if (!scrollLock) {
+		showDiv[0].scrollTop = 1000000;
+	}
+
+	//div.scrollTop = div.scrollHeight;
+}
+
+function init() {
+	showDiv = $('#showDiv');
+	showInput = $('#showInput');
+	showUrl = $('#showUrl');
+
+	esUrl = "";
+	lastError = null;
+
+	var url = window.location;
+	esUrl = "http://" + url.host + "/";
+
+	if (!url.host) {
+		esUrl = "http://es-4.intra.sit.ffan.com/";
+	}
+	//url = url.substring(0, url.indexOf('/'));
+
+	scrollLock = false;
+
+	showUrl.val(esUrl);
+	connect();
+	showDiv
+			.append("<p style='color:yellow;'>Input 'help' or 'sp/help' for the cat's help and sp-tools's help<br/>"
+					+ "Directly input the cat command and input sp/xxxx to access the functions<br/>"
+					+ "EX:&nbsp; nodes  &nbsp;&nbsp;&nbsp;  sp/logger </p><br/>");
+
+	showInput[0].focus();
+
+	$(document).keyup(function(e) {
+		//enter
+		if (e.keyCode == 13) {
+			processInput(showInput);
+		}
+		if (e.keyCode == 38) {
+			processHistory(showInput);
+		}
+	});
+
+	commands = new Array();
+	cmd = '';
+}
+function connect() {
+	console.info("connect...");
+	var url = showUrl.val();
+	if (!url.endsWith('/')) {
+		url = url + '/';
+	}
+	esUrl = url;
+	$.get(url + "_cat", null, function(data, status) {
+		processConnect(data, status);
+	}, 'text').fail(function(e) {
+		console.info(e);
+		processError(e);
+	});
+}
+function processConnect(data, status) {
+	console.info("connecting data deal...");
+	//console.info(data);
+	//console.info(status);
+	if (status = 'success') {
+		showDiv
+				.append("<p style='color:yellow;'>connect... success</p><p  style='color:yellow;'>-----</p>");
+	}
+	scorllDown();
+}
+function processError(e) {
+	lastError = e;
+	//if (status = 'success') {
+	var errorMsg = lastError.responseText;
+	console.info(errorMsg);
+	showDiv
+			.append("<p style='color:red;'>"
+					+ showInput.val().trim()
+					+ " : "
+					+ e.statusText
+					+ " "
+					+ e.status
+					+ " \r\n <input type='button' value='detail' onclick='alert($(this).next().html())'/><span style='visibility:hidden'>"
+					+ errorMsg + "</span></p>"
+					+ "<p  style='color:yellow;'>-----</p>");
+	//lastError.responseText
+	//}
+	scorllDown();
+
+}
+</script>
+<style>
+p {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	line-height: 110%;
+}
+
+pre {
+	padding: 0px;
+	font-size: 100%;
+	color: white;
+	background-color: black;
+	border-radius: 0px;
+}
+
+em {
+	color: red;
+	font-weight: bold;
+}
+</style>
+</head>
+<body style="background-color: #223344;">
+
+	<div></div>
+	<div id="showDiv"
+		style="word-wrap: normal; width: 75%; height: 600px; FLOAT: left; LINE-HEIGHT: 14px; TEXT-ALIGN: left; border: 1px solid #999999; padding: 1px; overflow-wrap: break-word; overflow-y: scroll; color: white; background-color: black;">
+	</div>
+	<div>
+		<input id="showInput" onChange="inputChange(this);"
+			style="width: 75%; color: white; background-color: black; LINE-HEIGHT: 18px; TEXT-ALIGN: left;" />
+	</div>
+	<div style="width: 75%;">
+		<div style="float: right">
+			<input class="btn btn-xs btn-info" type="button"
+				onClick="clearShow();" value="清空显示" /> <input
+				class="btn btn-xs btn-info" type="button" onClick="upFont();"
+				value="增大字体" /> <input class="btn btn-xs btn-info" type="button"
+				onClick="downFont();" value="减小字体" />
+			<!-- <input
+				class="btn btn-xs btn-info" type="button"
+				onClick="scrollLockChange();" value="自动滚动切换" /> -->
+		</div>
+	</div>
+	<div style="width: 75%;">
+		<input id="showUrl"
+			style="width: 35%; color: #887799; background-color: #223344; TEXT-ALIGN: left;" />
+		<input class="btn btn-xs btn-info" type="button" onClick="connect();"
+			value="切换链接" />
+	</div>
+	<script>
+		init();
+	</script>
+</body>
+</html>
