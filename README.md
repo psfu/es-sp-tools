@@ -50,7 +50,7 @@ auth.seed=33024
 * import the shui utils form the Waterwave project
 
 #### The Console:
- ![00-console.png](https://github.com/psfu/es-sp-tools/raw/master/info/00-console.png)
+ ![00-console.png](https://raw.githubusercontent.com/psfu/es-sp-tools/master/info/00-console.png)
 
 
 
