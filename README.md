@@ -47,7 +47,7 @@ auth.seed=33024
 * complete the document
 * add validation functions
 * add authentication by user
-* import the shui utils form the Waterwave project
+* import the Shui utils from the Waterwave project
 
 ### The Console:
  ![00-console.png](https://raw.githubusercontent.com/psfu/es-sp-tools/master/info/00-console.png)
