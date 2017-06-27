@@ -17,13 +17,53 @@
  * under the License.
  */
  
-grant {
-	//permission java.lang.RuntimePermission "getClassLoader";
-	
-	//permission java.security.SecurityPermission "createPolicy.JavaPolicy";
-	permission java.security.SecurityPermission "getPolicy";
-
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.misc";
-	permission java.lang.RuntimePermission "accessDeclaredMembers";
+grant codeBase "file:/./" {
 	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
 };
+
+
+grant codeBase "file:/D:/_workspace/ws005/elasticsearch-tools-sp/target/classes" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+grant codeBase "file:/D:/_workspace/ws005/elasticsearch-tools-sp/target/classes/search/plugins/action" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+grant codeBase "file:/D:/_workspace/ws005/elasticsearch-tools-sp/target/classes/search/plugins/filter/*" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+grant codeBase "file:/D:/_workspace/ws005/elasticsearch-tools-sp/target/classes/search/plugins/*" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+grant codeBase "file:/D:/_workspace/ws005/elasticsearch-tools-sp/target/classes/search/plugins/filter/SpActionFilter.java" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+grant  {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+
+grant {
+	permission java.security.AllPermission;
+};
+
+
+grant codeBase "file:/D:/_workspace/ws005/es5test/target/classes" {
+	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
+//grant codeBase "${codebase.netty-common-4.1.9.Final.jar}" {
+   // for reading the system-wide configuration for the backlog of established sockets
+//   permission java.io.FilePermission "/proc/sys/net/core/somaxconn", "read";
+//};
+
+//grant codeBase "${codebase.netty-transport-4.1.9.Final.jar}" {
+   // Netty NioEventLoop wants to change this, because of https://bugs.openjdk.java.net/browse/JDK-6427854
+   // the bug says it only happened rarely, and that its fixed, but apparently it still happens rarely!
+   //permission java.util.PropertyPermission "sun.nio.ch.bugLevel", "write";
+//};
+
