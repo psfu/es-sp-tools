@@ -10,7 +10,7 @@
 * * the plugin's function can start/stop or define with /_sp, it also can set in the console. 
 
 
-### using:
+### Using:
 * help info: 
   > in the console (_console) type sp/help or using url _sp/help
 * get service info: 
@@ -25,7 +25,7 @@
   > kibana: iptable, head: auth, kopf: auth
 
 
-### installation:
+### Installation:
 * undeploy zip file in folder ./plugins it will create a folder named "tools-sp".
 * using config.properties to config the plugin
 * sp.tools.path.name can set in elasticsearch.yml
@@ -38,7 +38,7 @@ admin.userKey=go
 auth.seed=33024
 </pre>
 
-### others
+### Details
 * the cookie using an simple algorithms, it changes every time when generate, and very fast to validate because very simple :)
 * the ES do not have the remote IP info in the request in this version 5.4.x and may get it from netty channel. ... 
 
