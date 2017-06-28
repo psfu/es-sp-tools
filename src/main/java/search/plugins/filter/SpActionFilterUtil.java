@@ -8,7 +8,6 @@ import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.rest.RestRequest;
 
-import search.plugins.common.Common;
 import search.plugins.functions.utils.RestRequestUtil;
 
 public class SpActionFilterUtil {

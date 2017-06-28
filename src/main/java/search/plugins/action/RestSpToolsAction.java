@@ -319,10 +319,20 @@ public class RestSpToolsAction extends BaseRestHandler {
 		Properties pp = Common.loadPropertiesfile(pluginPath + "config.properties");
 		adminKey = pp.getProperty("admin.adminKey", "admin");
 		userKey = pp.getProperty("admin.userKey", "go");
-		String seed = pp.getProperty("auth.seed");
-		if (seed != null) {
-			auther.setSeed(Integer.parseInt(seed));
-		}
+		
+		
+		auther.updateSettings(pp);
+		actionLogger.updateSettings(pp);
+		
+//		String seed = pp.getProperty("auth.seed");
+//		if (seed != null) {
+//			auther.setSeed(Integer.parseInt(seed));
+//		}
+//		
+//		String usingAuth = pp.getProperty("auther.using","true");
+//		String usinglog = pp.getProperty("logger.using","true");
+		
+		
 	}
 
 }

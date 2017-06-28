@@ -14,7 +14,9 @@ public class ESRecord implements Comparable<ESRecord> {
 	public String remoteIp;
 	public long startTime;
 	public int executeTime;
+	
 	boolean isAuthed;
+	boolean isJavaClient;
 	//
 	public boolean isInTime;
 
@@ -24,6 +26,7 @@ public class ESRecord implements Comparable<ESRecord> {
 	}
 
 	DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss", Locale.US);
+	
 
 	public void write(Buffer bb) {
 		this.write(bb.getStringBuilder());
@@ -46,6 +49,8 @@ public class ESRecord implements Comparable<ESRecord> {
 		sb.append(remoteIp);
 		sb.append(" ");
 		sb.append(isAuthed ? "authed" : "notAuthed");
+		sb.append(" ");
+		sb.append(isJavaClient ? "java" : "http");
 		sb.append("\r\n");
 		sb.append(statement);
 		sb.append("\r\n");

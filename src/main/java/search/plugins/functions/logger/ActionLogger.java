@@ -9,6 +9,6 @@ public interface ActionLogger extends SpService{
 
 	
 
-	void log(Task task, String action, ActionRequest request, boolean isAuthed);
+	void log(Task task, String action, ActionRequest request, boolean isAuthed, boolean isJavaClient);
 
 }

@@ -37,6 +37,10 @@ admin.adminKey=admin
 admin.userKey=go
 #the simple seed, which using for authentication with cookie
 auth.seed=33024
+#switch the logger
+logger.using=true;
+#switch the auther
+auther.using=true;
 </pre>
 
 ### Details

@@ -24,10 +24,10 @@ public class SpActionFilter extends AbstractComponent implements ActionFilter, S
 			Common.log0(o);
 		}
 	}
-	
-	//TODO
-	// BULK 
-	
+
+	// TODO
+	// BULK
+
 	// @Inject
 	// public SpActionFilter(Settings settings, Auther auther, ActionLogger actionLogger) {
 	// super(settings);
@@ -75,25 +75,34 @@ public class SpActionFilter extends AbstractComponent implements ActionFilter, S
 		// TODO Auto-generated method stub
 		log(1, "apply... " + action);
 
-		boolean isJavaClient = isJavaClient(task, request);
-		boolean isSystemAction = checkSystemAction(task, action);
-		boolean isAuthed = false;
-		if (!isSystemAction) {
-			SpActionFilterUtil.checkRemoteAddress(request, listener);
-			isAuthed = auther.auth(task, action, request, listener, isJavaClient);
-			log(1, "remoteAddress:" + request.remoteAddress());
+		boolean usingAuth = auther.isUsing();
+		boolean usinglog = actionLogger.isUsing();
 
-			actionLogger.log(task, action, request, isAuthed);
-		}
-		
+		if (usingAuth || usinglog) {
+			boolean isJavaClient = isJavaClient(task, request);
+			boolean isSystemAction = checkSystemAction(task, action);
+			boolean isAuthed = false;
+			if (!isSystemAction) {
+				SpActionFilterUtil.checkRemoteAddress(request, listener);
 
-		if (!isAuthed && !isSystemAction) {
-			// listener.onResponse();
-			// listener.onResponse(new BytesRestResponse(RestStatus.OK, helpString));
-			if (!isJavaClient) {
-				listener.onFailure(new Exception("the auth is must please do the auth, this message is from sp tools"));
+				isAuthed = usingAuth ? auther.auth(task, action, request, listener, isJavaClient) : true;
+				log(1, "remoteAddress:" + request.remoteAddress());
+
+				if(usinglog) {
+					actionLogger.log(task, action, request, isAuthed, isJavaClient);
+				}
 			}
 
+			if (!isAuthed && !isSystemAction) {
+				// listener.onResponse();
+				// listener.onResponse(new BytesRestResponse(RestStatus.OK, helpString));
+				if (!isJavaClient) {
+					listener.onFailure(new Exception("the auth is must please do the auth, this message is from sp tools"));
+				}
+
+			} else {
+				chain.proceed(task, action, request, listener);
+			}
 		} else {
 			chain.proceed(task, action, request, listener);
 		}

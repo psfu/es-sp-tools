@@ -14,7 +14,7 @@ import search.plugins.functions.SpService;
 
 public interface Auther extends SpService {
 
-	public boolean using = true;
+	//public boolean using = true;
 
 	String genKey(Calendar cal, String user);
 
@@ -28,6 +28,6 @@ public interface Auther extends SpService {
 
 	Map<String, Permissions> getIpListClient();
 
-	public void setSeed(int value);
+	//public void setSeed(int value);
 
 }

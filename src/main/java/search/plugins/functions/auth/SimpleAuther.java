@@ -3,6 +3,7 @@ package search.plugins.functions.auth;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.ActionRequest;
@@ -22,6 +23,8 @@ public class SimpleAuther implements Auther {
 		}
 	}
 
+	public boolean using = true;
+	
 	public boolean restUsing = true;
 	/**
 	 * java client iplist is in optimizing
@@ -29,14 +32,26 @@ public class SimpleAuther implements Auther {
 	public boolean clienttUsing = false;
 	int seed = 0x8100;
 	
-	@Override
-	public void setSeed(int value) {
-		seed = value;
-	}
+//	@Override
+//	public void setSeed(int value) {
+//		seed = value;
+//	}
 
 	@Inject
 	public SimpleAuther(Settings settings) {
 
+	}
+	
+	@Override
+	public void updateSettings(Properties pp) {
+		// TODO Auto-generated method stub
+		String seed = pp.getProperty("auth.seed");
+		if (seed != null) {
+			this.seed = Integer.parseInt(seed);
+		}
+		
+		String usingAuth = pp.getProperty("auther.using","true");
+		this.using = Boolean.parseBoolean(usingAuth);
 	}
 
 	public Map<String, Permissions> ipListClient = new HashMap<>();
@@ -159,6 +174,11 @@ public class SimpleAuther implements Auther {
 	public boolean isRunning() {
 		return using;
 	}
+	
+	@Override
+	public boolean isUsing() {
+		return using;
+	}
 
 	public static void main(String[] args) {
 		SimpleAuther sa = new SimpleAuther(null);
@@ -181,6 +201,8 @@ public class SimpleAuther implements Auther {
 		// TODO Auto-generated method stub
 		return this.ipListClient;
 	}
+
+	
 
 	
 
