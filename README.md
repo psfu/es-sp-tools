@@ -5,7 +5,7 @@
 * SP means special 
 * It is able to provide:
 * * authencation with cookie to Http request and authencation with an ip table to both Http and Transport request. 
-* * high speed to record the access info include remoteIp with a lock free queue which be described in the paper, it record both Http and transport request.
+* * high speed to record the access info include remoteIp with a variation of lock free queue which be described in the paper, it record both Http and transport request.
 * * including a console, it can input and review command and result like linux console of "_cat"'s command.
 * * the service and functions, which can start and stop or define with /_sp/xxx, and the service and functions can be seted in the console. 
 
