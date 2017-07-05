@@ -56,6 +56,9 @@ auther.using=true;
 
 
 ### The Console:
+just download the console:  
+[download](https://raw.githubusercontent.com/psfu/es-sp-tools/master/dist/0.0.1.alpha/sp-console.zip)
+
  ![00-console.png](https://raw.githubusercontent.com/psfu/es-sp-tools/master/info/00-console.png)
 
 
