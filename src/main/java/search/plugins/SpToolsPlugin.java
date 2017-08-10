@@ -60,7 +60,7 @@ public class SpToolsPlugin extends Plugin implements ActionPlugin {
 		this.settings = settings;
 
 		// SecurityHelper.addPolicy();
-
+		
 		RestRequestUtil.init();
 		log(3, "---> SpToolsPlugin init");
 	}
@@ -95,6 +95,11 @@ public class SpToolsPlugin extends Plugin implements ActionPlugin {
 		return Arrays.asList(new RestSpToolsAction(settings, restController), new RestConsoleAction(settings, restController, clusterSettings, settingsFilter));
 
 	}
+	
+	public static void main(String[] args) {
+		System.out.println("st-tools ..... ");
+	}
+	
 	// @Override
 	// public String description() {
 	// return "a tools for elasticsearch";

@@ -42,7 +42,7 @@ public class Common {
 	public static String getPathResources(Settings settings) {
 		String sep = "/";
 		String path = settings.get("path.home");
-		String pluginPath = settings.get("sp.tools.path.name", "tools-sp");
+		String pluginPath = settings.get("sp.tools.path.name", "sp-tools");
 		path += sep + "plugins";
 		path += sep + pluginPath;
 		path += sep + "resources";
@@ -53,7 +53,7 @@ public class Common {
 	public static String getPath(Settings settings) {
 		String sep = "/";
 		String path = settings.get("path.home");
-		String pluginPath = settings.get("sp.tools.path.name", "tools-sp");
+		String pluginPath = settings.get("sp.tools.path.name", "sp-tools");
 		path += sep + "plugins";
 		path += sep + pluginPath;
 		path += sep;

@@ -27,7 +27,7 @@
 
 ### Installation:
 * download the zip file in the dist folder.
-* undeploy the zip file in ./plugins in folder of Elasticsearch, and then it will create a folder named "tools-sp".
+* undeploy the zip file in ./plugins in folder of Elasticsearch, and then it will create a folder named "sp-tools".
 * config the plugin with editing the config.properties.(sp.tools.path.name can set in elasticsearch.yml)
 * config.properties:
 <pre>
