@@ -35,8 +35,7 @@ import search.plugins.common.Common;
  * 
  * @author psfu vv
  * 
- *         normal operation with out lock, even if using the blockingQueue it's have a lock cost;
- *         we want using a way that has minima use the lock; 
+ *         normal operation with out lock, even if using the blockingQueue it's have a lock cost; we want using a way that has minima use the lock;
  *
  */
 public class CacheLoggerWriter {
@@ -145,7 +144,7 @@ class ESLogThread implements Runnable {
 		}
 
 		public int capacity() {
-			// TODO 
+			// TODO
 			return sb.capacity();
 		}
 
@@ -252,7 +251,7 @@ class ESLogThread implements Runnable {
 	}
 
 	public File getFile() {
-
+		
 		Long t0 = System.currentTimeMillis();
 		String t01 = dformat1.format(new Date(t0));
 		File f = new File(filePath + t01 + ".log");
@@ -267,6 +266,14 @@ class ESLogThread implements Runnable {
 		return f;
 	}
 
+	// delete the 0 size file
+	private void dealOldFile() {
+		if (this.f.length() <= 0) {
+			f.delete();
+		}
+
+	}
+
 	public void execute(Buffer bb, FileChannel fc) throws InterruptedException, IOException {
 
 		// ESRecordList lr = CacheLoggerWriter.bqr.take(2000);
@@ -278,15 +285,11 @@ class ESLogThread implements Runnable {
 			if (lr != null) {
 				dealRecordList(bb, fc, lr, false);
 			} else {
-				//TODO
+				// TODO
 				/*
-				Set<Long> ks = CacheLoggerWriter.llr.keySet();
-				for (long k : ks) {
-					//
-					lr = CacheLoggerWriter.llr.remove(k);
-					dealRecordList(bb, fc, lr, true);
-				}
-				*/
+				 * Set<Long> ks = CacheLoggerWriter.llr.keySet(); for (long k : ks) { // lr = CacheLoggerWriter.llr.remove(k); dealRecordList(bb, fc, lr, true);
+				 * }
+				 */
 				Set<Long> ks = CacheLoggerWriter.llr.keySet();
 				for (long k : ks) {
 					lr = CacheLoggerWriter.llr.get(k);
@@ -311,9 +314,9 @@ class ESLogThread implements Runnable {
 	private void dealRecordList(Buffer bb, FileChannel fc, ESRecordList lr, boolean isInTime) throws IOException {
 		int i = lr.position;
 		lr.setCurrentPosition();
-//		if (isInTime) {
-//			lr.setCurrentPosition();
-//		}
+		// if (isInTime) {
+		// lr.setCurrentPosition();
+		// }
 
 		for (; i < lr.lr.size(); ++i) {
 			ESRecord r = lr.lr.get(i);
@@ -352,6 +355,9 @@ class ESLogThread implements Runnable {
 
 		Long t001 = System.currentTimeMillis();
 		if ((t001 - this.t00) > fileInterval) {
+			
+			dealOldFile();
+			
 			f = getFile();
 			fc = getChannel(f, fc);
 			this.t00 = t001;
