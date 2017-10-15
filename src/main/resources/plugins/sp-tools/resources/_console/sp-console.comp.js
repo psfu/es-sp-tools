@@ -1,18 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>sp tools console</title>
-<script src="./_console/js/jquery.js"></script>
-<script>
+/**
+ * auther psfu
+ * 
+ * 
+ * 
+ */
+
+
+helpText = "<p style='color:yellow;'>"
+		+ "------------------------------------------------------------<br/>"
+		+ "-&nbsp; The sp console is authored by psfu<br/>"
+		+ "-&nbsp; Directly input the cat command &nbsp;&nbsp;&nbsp; <b>EX:&nbsp; <u>nodes</u></b><br/>"
+		+ "-&nbsp; Input &nbsp; <b><u>help</u></b> &nbsp; for  _cat's help<br/>"
+		+ "-&nbsp; If using sp-tools, Input <b><u>sp/help</u></b> for help<br/>"
+		+ "------------------------------------------------------------<br/>"
+		+ "</p><br/>";
+
+
 function clearShow() {
 	console.info('clear');
 	showDiv.children("p").each(function(idx, e) {
 		console.info(e);
 		e.remove();
 	});
+	showDiv.children("br").each(function(idx, e) {
+		console.info(e);
+		e.remove();
+	});
+
+	showDiv.append(helpText);
 
 }
 fontSize = 100;
@@ -46,15 +61,26 @@ function processHistory(input) {
 }
 function processInput(input) {
 	var command = input.val().trim();
+	if (command == '') {
+		return;
+	}
 	cmd = command;
 
 	var url = esUrl;
 	if (!command.startsWith('sp/')) {
-		url = url + '_cat/';
+		if (command.startsWith('_cat/')) {
+		} else {
+			url = url + '_cat/';
+		}
+
 		if (command == 'help') {
 			command = '';
-		} else if (command.indexOf('?') < 0) {
-			command += '?v'
+		} else {
+			if (command.indexOf('?') < 0) {
+				command += '?v'
+			} else if (command.indexOf('&v') < 0) {
+				command += '&v'
+			}
 		}
 	} else {
 		url = url + '_sp/';
@@ -77,6 +103,17 @@ function processCommand(data, status) {
 }
 
 function dealDataLine(data) {
+	// the cat help
+	console.info(cmd);
+	if (cmd == 'help') {
+		data = data.replace(/\/_cat\//gm, '');
+		console.info(data);
+	}
+	if (cmd == 'sp/help') {
+		data = data.replace(/\/_sp/gm, 'sp');
+		console.info(data);
+	}
+
 	var line = document.createElement('p');
 	var sp = ' ';
 
@@ -85,7 +122,7 @@ function dealDataLine(data) {
 
 	var str = '<span style=" color: yellow;">' + oldcmd + ' '
 			+ '</span> : <span> <pre>' + data + '</pre></span>';
-	//+ '</span> : <span> ' + data + '</span>';
+	// + '</span> : <span> ' + data + '</span>';
 
 	line.innerHTML = str;
 	showDiv.append(line);
@@ -100,9 +137,9 @@ function dealDataLineNew(data) {
 
 	var datas = data.split("\r\n");
 
-	//var str = '<span style=" color: yellow;">' + sp
-	//		+ '</span> : <span> <code>' + data + '</code></span>';
-	//		//+ '</span> : <span> ' + data + '</span>';
+	// var str = '<span style=" color: yellow;">' + sp
+	// + '</span> : <span> <code>' + data + '</code></span>';
+	// //+ '</span> : <span> ' + data + '</span>';
 
 	for (l in datas) {
 		var str = '<span style=" color: yellow;">' + sp
@@ -121,44 +158,59 @@ function scorllDown() {
 		showDiv[0].scrollTop = 1000000;
 	}
 
-	//div.scrollTop = div.scrollHeight;
+	// div.scrollTop = div.scrollHeight;
 }
 
 function init() {
+	//
+	var showSingle = false;
 	showDiv = $('#showDiv');
 	showInput = $('#showInput');
 	showUrl = $('#showUrl');
 
 	esUrl = "";
 	lastError = null;
+	selected = '';
 
 	var url = window.location;
 	esUrl = "http://" + url.host + "/";
 
-	if (!url.host) {
-		esUrl = "http://es-4.intra.sit.ffan.com/";
+	if (showSingle || !url.host) {
+		esUrl = defaultUrl;
 	}
-	//url = url.substring(0, url.indexOf('/'));
+	// url = url.substring(0, url.indexOf('/'));
 
 	scrollLock = false;
 
 	showUrl.val(esUrl);
 	connect();
-	showDiv
-			.append("<p style='color:yellow;'>Input 'help' or 'sp/help' for the cat's help and sp-tools's help<br/>"
-					+ "Directly input the cat command and input sp/xxxx to access the functions<br/>"
-					+ "EX:&nbsp; nodes  &nbsp;&nbsp;&nbsp;  sp/logger </p><br/>");
+	showDiv.append(helpText);
 
 	showInput[0].focus();
 
 	$(document).keyup(function(e) {
-		//enter
+		// enter
 		if (e.keyCode == 13) {
 			processInput(showInput);
 		}
 		if (e.keyCode == 38) {
 			processHistory(showInput);
 		}
+	});
+
+	$(document).contextmenu(function(e) {
+		if (selected) {
+			showInput.val(showInput.val() + selected);
+		}
+	});
+
+	$(document).click(function(e) {
+		var str = getSelectedText();
+		if (str) {
+			selected = str;
+		}
+		console.info(selected);
+
 	});
 
 	commands = new Array();
@@ -180,8 +232,8 @@ function connect() {
 }
 function processConnect(data, status) {
 	console.info("connecting data deal...");
-	//console.info(data);
-	//console.info(status);
+	// console.info(data);
+	// console.info(status);
 	if (status = 'success') {
 		showDiv
 				.append("<p style='color:yellow;'>connect... success</p><p  style='color:yellow;'>-----</p>");
@@ -190,7 +242,7 @@ function processConnect(data, status) {
 }
 function processError(e) {
 	lastError = e;
-	//if (status = 'success') {
+	// if (status = 'success') {
 	var errorMsg = lastError.responseText;
 	console.info(errorMsg);
 	showDiv
@@ -203,63 +255,21 @@ function processError(e) {
 					+ " \r\n <input type='button' value='detail' onclick='alert($(this).next().html())'/><span style='visibility:hidden'>"
 					+ errorMsg + "</span></p>"
 					+ "<p  style='color:yellow;'>-----</p>");
-	//lastError.responseText
-	//}
+	// lastError.responseText
+	// }
 	scorllDown();
 
 }
-</script>
-<style>
-p {
-	margin-top: 4px;
-	margin-bottom: 4px;
-	line-height: 110%;
-}
 
-pre {
-	padding: 0px;
-	font-size: 100%;
-	color: white;
-	background-color: black;
-	border-radius: 0px;
-}
+function getSelectedText() { 
+	try {
+		var selecter = window.getSelection().getRangeAt(0).toString();
+		if (selecter != null && selecter.trim() != "") {
+			return selecter;
+		}
+	} catch (e) {
+		console.warn(e);
+	}
+	return '';
 
-em {
-	color: red;
-	font-weight: bold;
 }
-</style>
-</head>
-<body style="background-color: #223344;">
-
-	<div></div>
-	<div id="showDiv"
-		style="word-wrap: normal; width: 75%; height: 600px; FLOAT: left; LINE-HEIGHT: 14px; TEXT-ALIGN: left; border: 1px solid #999999; padding: 1px; overflow-wrap: break-word; overflow-y: scroll; color: white; background-color: black;">
-	</div>
-	<div>
-		<input id="showInput" onChange="inputChange(this);"
-			style="width: 75%; color: white; background-color: black; LINE-HEIGHT: 18px; TEXT-ALIGN: left;" />
-	</div>
-	<div style="width: 75%;">
-		<div style="float: right">
-			<input class="btn btn-xs btn-info" type="button"
-				onClick="clearShow();" value="清空显示" /> <input
-				class="btn btn-xs btn-info" type="button" onClick="upFont();"
-				value="增大字体" /> <input class="btn btn-xs btn-info" type="button"
-				onClick="downFont();" value="减小字体" />
-			<!-- <input
-				class="btn btn-xs btn-info" type="button"
-				onClick="scrollLockChange();" value="自动滚动切换" /> -->
-		</div>
-	</div>
-	<div style="width: 75%;">
-		<input id="showUrl"
-			style="width: 35%; color: #887799; background-color: #223344; TEXT-ALIGN: left;" />
-		<input class="btn btn-xs btn-info" type="button" onClick="connect();"
-			value="切换链接" />
-	</div>
-	<script>
-		init();
-	</script>
-</body>
-</html>

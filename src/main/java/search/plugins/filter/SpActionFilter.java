@@ -127,8 +127,8 @@ public class SpActionFilter extends AbstractComponent implements ActionFilter, S
 
 	private <Request extends ActionRequest> boolean isJavaClient(Task task, Request request) {
 		// transport
-		boolean isJavaClient = request.remoteAddress() != null ? true : false;
-
+		boolean isJavaClient = false;
+		//isJavaClient = request.remoteAddress() != null ? true : false;
 		isJavaClient = !task.getType().equals("transport");
 		return isJavaClient;
 	}

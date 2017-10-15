@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  */
- 
+
 package search.plugins.action;
 
 import java.io.File;
@@ -50,7 +50,7 @@ public class RestConsoleAction extends BaseRestHandler {
 		super(settings);
 		// TODO Auto-generated constructor stub
 		controller.registerHandler(Method.GET, "/_console", this);
-		controller.registerHandler(Method.GET, "/_console/{func}/{action}", this);
+		controller.registerHandler(Method.GET, "/_console/{action}", this);
 
 		String path = Common.getPathResources(settings);
 		this.getPath = path;
@@ -58,37 +58,61 @@ public class RestConsoleAction extends BaseRestHandler {
 
 	}
 
-	
-
 	@Override
 	protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
-		final String func = request.hasParam("func") ? request.param("func") : "con";
-		final String funcAction = request.hasParam("action") ? request.param("action") : "jquery.js";
+		// final String func = request.hasParam("func") ? request.param("func") : "con";
+		// final String funcAction = request.hasParam("action") ? request.param("action") : "jquery.js";
+
+		final String action = request.hasParam("action") ? request.param("action") : "show";
 
 		RestChannelConsumer rr = null;
 
-		if ("con".equals(func)) {
+		if ("show".equals(action)) {
 			rr = returnConsloe(request, client);
-		} else if ("js".equals(func)) {
-			rr = returnJs(request, client, funcAction);
+		} else {
+
+			if (action.endsWith("js") || action.endsWith("css")) {
+				rr = returnRs(request, client, action);
+			}
+
 		}
 
 		return rr;
 	}
 
-	private RestChannelConsumer returnJs(RestRequest request, NodeClient client, String funcAction) {
-		if ("jquery.js".equals(funcAction)) {
-			RestChannelConsumer rr = channel -> {
-				// RestRequest r = channel.request();
+	private RestChannelConsumer returnRs(RestRequest request, NodeClient client, String funcAction) {
+		String htmlType = "text/css";
 
-				byte[] rs = Common.readFile(new File(getPath + "jquery-3.2.1.comp.js"));
-				//image/jpeg
-				//
-				channel.sendResponse(new BytesRestResponse(RestStatus.OK, "application/x-javascript", rs));
-			};
-			return rr;
+		if (funcAction.endsWith(".js")) {
+			htmlType = "application/x-javascript";
+			funcAction = funcAction.replace(".js", ".comp.js");
 		}
-		return null;
+
+		String path = getPath + "_console/" + funcAction;
+		String type = htmlType;
+
+		byte[] rs = Common.readFile(new File(path));
+
+		if (rs == null) {
+			log(10, "returnRs not found ! " + path);
+		}
+
+
+		RestChannelConsumer rr = channel -> {
+			// RestRequest r = channel.request();
+
+			// byte[] rs = Common.readFile(new File(path));
+
+			// image/jpeg
+			//
+			if (rs == null) {
+				channel.sendResponse(new BytesRestResponse(RestStatus.NOT_FOUND, type, path + " not found!"));
+			} else {
+				channel.sendResponse(new BytesRestResponse(RestStatus.OK, type, rs));
+			}
+		};
+		return rr;
+
 	}
 
 	private RestChannelConsumer returnConsloe(RestRequest request, NodeClient client) {
@@ -101,7 +125,5 @@ public class RestConsoleAction extends BaseRestHandler {
 		};
 		return rr;
 	}
-
-	
 
 }

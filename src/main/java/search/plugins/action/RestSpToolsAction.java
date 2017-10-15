@@ -50,7 +50,9 @@ public class RestSpToolsAction extends BaseRestHandler {
 	String helpString = "please input: \r\n /_sp/help \r\n /_sp/auther \r\n /_sp/logger \r\n";
 	String helpAutherString = "please input: \r\n /_sp/auther/start \r\n /_sp/auther/end \r\n /_sp/auther/stat\r\n /_sp/auther/auth\r\n /_sp/auther/settings\r\n";
 	String helpLoggerString = "please input: \r\n /_sp/logger/start \r\n /_sp/logger/end \r\n /_sp/logger/stat\r\n  and with param:\r\n remoteInfo=true/false\r\n";
-
+	String withPermission = "you do not have the permission to do this, please with the key. \r\n";
+	
+	
 	@Override
 	protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
 		// TODO Auto-generated method stub
@@ -123,17 +125,17 @@ public class RestSpToolsAction extends BaseRestHandler {
 
 				if (isAdmin) {
 					this.auther.start();
-					rs = "the auther is starting: \r\n";
+					rs = "the auther is starting.. \r\n";
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 				break;
 			case "end":
 				if (isAdmin) {
 					this.auther.end();
-					rs = "the auther is ending: \r\n";
+					rs = "the auther is ending.. \r\n";
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 				break;
 			case "auth":
@@ -160,7 +162,7 @@ public class RestSpToolsAction extends BaseRestHandler {
 					}
 
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 				break;
 			case "settings":
@@ -217,7 +219,7 @@ public class RestSpToolsAction extends BaseRestHandler {
 						rs += ipListClient.toString();
 					}
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 			}
 			channel.sendResponse(new BytesRestResponse(RestStatus.OK, rs));
@@ -231,7 +233,7 @@ public class RestSpToolsAction extends BaseRestHandler {
 		RestChannelConsumer rr = channel -> {
 			// RestRequest r = channel.request();
 
-			boolean stat = auther.isRunning();
+			boolean stat = this.actionLogger.isRunning();
 
 			boolean isAdmin = false;
 			// boolean isUser = false;
@@ -254,18 +256,18 @@ public class RestSpToolsAction extends BaseRestHandler {
 				break;
 			case "start":
 				if (isAdmin) {
-					this.auther.start();
+					this.actionLogger.start();
 					rs = "the logger is starting: \r\n";
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 				break;
 			case "end":
 				if (isAdmin) {
-					this.auther.end();
+					this.actionLogger.end();
 					rs = "the logger is ending: \r\n";
 				} else {
-					rs = "you do not have the permission to do this: \r\n";
+					rs = withPermission;
 				}
 				break;
 

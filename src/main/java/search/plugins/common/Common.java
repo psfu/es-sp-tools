@@ -27,10 +27,12 @@ import org.elasticsearch.common.settings.Settings;
 
 public class Common {
 	
-	public final static int logLevel = 1;
+	//TODO
+	public final static int logLevel = 0;
 	
+	//
 	public final static void log0(Object o){
-		
+		System.out.println(o.toString());
 	}
 
 	public static void log(int level, Object o) {

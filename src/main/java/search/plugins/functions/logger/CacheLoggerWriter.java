@@ -174,6 +174,7 @@ class ESLogThread implements Runnable {
 
 	static final int chunk = 4 * 1024 * 1024;
 	static final int chunk2 = 1 * 1024 * 1024;
+	//static final int fileInterval = 1 * 60 * 60 * 1000;
 	static final int fileInterval = 1 * 60 * 60 * 1000;
 	static final int checkInterval = 2 * 1000;
 
@@ -266,14 +267,6 @@ class ESLogThread implements Runnable {
 		return f;
 	}
 
-	// delete the 0 size file
-	private void dealOldFile() {
-		if (this.f.length() <= 0) {
-			f.delete();
-		}
-
-	}
-
 	public void execute(Buffer bb, FileChannel fc) throws InterruptedException, IOException {
 
 		// ESRecordList lr = CacheLoggerWriter.bqr.take(2000);
@@ -363,6 +356,20 @@ class ESLogThread implements Runnable {
 			this.t00 = t001;
 			log(1, "file....");
 		}
+	}
+	
+
+	// delete the 0 size file
+	private void dealOldFile() {
+		if (this.f.length() <= 0) {
+			try {
+				fc.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			f.delete();
+		}
+
 	}
 
 	public void write0old(ByteBuffer bb, FileChannel fc) throws IOException {

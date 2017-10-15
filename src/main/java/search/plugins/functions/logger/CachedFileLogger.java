@@ -41,6 +41,9 @@ public class CachedFileLogger implements ActionLogger {
 		this.using = Boolean.parseBoolean(usingLog);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void log(Task task, String action, ActionRequest request, boolean isAuthed, boolean isJavaClient) {
 		// request.toString();
