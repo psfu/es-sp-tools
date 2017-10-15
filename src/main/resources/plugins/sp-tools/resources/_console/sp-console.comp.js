@@ -5,7 +5,6 @@
  * 
  */
 
-
 helpText = "<p style='color:yellow;'>"
 		+ "------------------------------------------------------------<br/>"
 		+ "-&nbsp; The sp console is authored by psfu<br/>"
@@ -14,7 +13,6 @@ helpText = "<p style='color:yellow;'>"
 		+ "-&nbsp; If using sp-tools, Input <b><u>sp/help</u></b> for help<br/>"
 		+ "------------------------------------------------------------<br/>"
 		+ "</p><br/>";
-
 
 function clearShow() {
 	console.info('clear');
@@ -53,11 +51,32 @@ function scrollLockChange() {
 function inputChange(input) {
 
 }
-function processHistory(input) {
-	var oldcmd = commands[commands.length - 1];
-	if (oldcmd) {
-		input.val(oldcmd);
+function addCmdHistory(cmd) {
+	commands.push(cmd);
+	historyPoint = 1;
+}
+function processHistory(input, up) {
+	if (up) {
+		var oldcmd = commands[commands.length - historyPoint];
+
+		if (oldcmd) {
+			input.val(oldcmd);
+		}
+		if (historyPoint < commands.length) {
+			historyPoint++;
+		}
+		
+	} else {
+		if (historyPoint > 1) {
+			historyPoint--;
+		}
+		var oldcmd = commands[commands.length - historyPoint];
+
+		if (oldcmd) {
+			input.val(oldcmd);
+		}
 	}
+
 }
 function processInput(input) {
 	var command = input.val().trim();
@@ -109,7 +128,7 @@ function dealDataLine(data) {
 		data = data.replace(/\/_cat\//gm, '');
 		console.info(data);
 	}
-	if (cmd == 'sp/help') {
+	if (cmd.startsWith('sp/')) {
 		data = data.replace(/\/_sp/gm, 'sp');
 		console.info(data);
 	}
@@ -117,7 +136,8 @@ function dealDataLine(data) {
 	var line = document.createElement('p');
 	var sp = ' ';
 
-	commands.push(cmd);
+	addCmdHistory(cmd);
+
 	var oldcmd = commands[commands.length - 1];
 
 	var str = '<span style=" color: yellow;">' + oldcmd + ' '
@@ -193,8 +213,11 @@ function init() {
 		if (e.keyCode == 13) {
 			processInput(showInput);
 		}
+		// up
 		if (e.keyCode == 38) {
-			processHistory(showInput);
+			processHistory(showInput,true);
+		}else if(e.keyCode == 40) {
+			processHistory(showInput,false);
 		}
 	});
 
@@ -261,7 +284,7 @@ function processError(e) {
 
 }
 
-function getSelectedText() { 
+function getSelectedText() {
 	try {
 		var selecter = window.getSelection().getRangeAt(0).toString();
 		if (selecter != null && selecter.trim() != "") {
