@@ -172,9 +172,11 @@ class ESLogThread implements Runnable {
 		f = getFile();
 	}
 
+
 	static final int chunk = 4 * 1024 * 1024;
 	static final int chunk2 = 1 * 1024 * 1024;
 	//static final int fileInterval = 1 * 60 * 60 * 1000;
+	//TODO
 	static final int fileInterval = 1 * 60 * 60 * 1000;
 	static final int checkInterval = 2 * 1000;
 
