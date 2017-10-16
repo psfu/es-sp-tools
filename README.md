@@ -12,17 +12,18 @@
 
 ### Using:
 ![00-console.png](https://raw.githubusercontent.com/psfu/es-sp-tools/master/info/sp-tools.01.png)
+* start:
+  > using: http://127.0.0.1:9200/_console; also can use in local, just access the html file and input the URL of ES (have set the cross access)
 * help info: 
-  > using: http://127.0.0.1:9200/_console
-  > in the console (_console) type sp/help or using url _sp/help
+  > in the console type sp/help or using url _sp/help
 * get service info: 
-  > EX: in the console (_console) type sp/logger/stat or using url _sp/logger/stat	
+  > EX: in the console type sp/logger/stat or using url _sp/logger/stat	
 * start/stop service: 
-  > EX: in the console (_console) type sp/logger/start?key=xxx or using url _sp/logger/stop?key=xxx
+  > EX: in the console type sp/logger/start?key=xxx or using url _sp/logger/stop?key=xxx
 * set service: 
-  > EX: in the console (_console) type sp/auther/settings?restIpMap=127.0.0.1:true;127.0.0.1:true;&key=xxx or using url _sp/auther/settings?restIpMap=127.0.0.1:true;127.0.0.1:true;&key=xxx
+  > EX: in the console type sp/auther/settings?restIpMap=127.0.0.1:true;127.0.0.1:true;&key=xxx or using url _sp/auther/settings?restIpMap=127.0.0.1:true;127.0.0.1:true;&key=xxx
 * authenticate current browser: 
-  > in the console (_console) type sp/auth?key=xxx or using url _sp/auth?key=xxx
+  > in the console type sp/auth?key=xxx or using url _sp/auth?key=xxx
 * use the kibana head kopf:
   > kibana: using the authencation of iptable , head: using the authencation of browser, kopf: using the authencation of browser
 
