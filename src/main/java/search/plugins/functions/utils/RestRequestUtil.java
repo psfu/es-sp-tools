@@ -98,7 +98,9 @@ public class RestRequestUtil {
 			try {
 				// rch = (RestChannel) ch.get(listener);
 				rch = (RestChannel) ch.get(rl);
-				Common.log0("rch:\t" + rch);
+				if (Common.canLog(1)) {
+					Common.log(1, "rch:\t" + rch);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

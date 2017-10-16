@@ -184,7 +184,7 @@ class ESLogThread implements Runnable {
 	static final SimpleDateFormat dformat2 = new SimpleDateFormat("yyyyMMdd-HH");
 
 	public void log(int level, Object o) {
-		if (level > 1) {
+		if (level > 2) {
 			Common.log0(o);
 		}
 	}
@@ -318,7 +318,7 @@ class ESLogThread implements Runnable {
 			// log(1,r);
 			// if (sb.remaining() < chunk2) {
 			if (bb.capacity() < chunk2) {
-				log(2, "full write....");
+				log(3, "full write....");
 				write0(bb, fc);
 			}
 			if (isInTime) {
