@@ -58,10 +58,11 @@ auther.using=true;
 
 ### The Console:
 Sp-tools:
-[download](https://raw.githubusercontent.com/psfu/es-sp-tools/master/dist/0.1.1.alpha/sp-tools.zip)
+* [download sp-tools](https://raw.githubusercontent.com/psfu/es-sp-tools/master/dist/0.1.1.alpha/sp-tools.zip)
 
 be able to download the console only(If using the full Sp-tools, please remove the console and install the Sp-tools.):
-[download](https://raw.githubusercontent.com/psfu/es-sp-console/master/dist/0.1.1.alpha/sp-tools.zip)  
+* [home of the console](https://github.com/psfu/es-sp-console "console")
+* [download the console only](https://raw.githubusercontent.com/psfu/es-sp-console/master/dist/0.1.1.alpha/sp-tools.zip)  
 
 ![00-console.png](https://raw.githubusercontent.com/psfu/es-sp-tools/master/info/00-console.png)
 
